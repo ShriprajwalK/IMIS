@@ -11,7 +11,6 @@ f = open(file_path,'r')
 no_of_rooms = f.read()
 f.close()
 
-'''
 room_template = """
 {% load static %}
 <html>
@@ -34,7 +33,7 @@ room_template = """
       <br>
       <br>
       <br>
-        <h1><a href="">{{ artifact.artifact_name }}</a></h1>
+        <h1><p>{{ artifact.artifact_name }}</p></h1>
         <p>Room number : {{ artifact.room_no }} , Artifact number: {{ artifact.artifact_no}} </p>
         <p>{{ artifact.artifact_description|linebreaksbr }}</p>
       <br>
@@ -45,27 +44,16 @@ room_template = """
 </body>
 </html>
 """
-'''
 
 
 def artifact_list(request):
-    print(type(request))
     artifacts = ArtifactDetail.objects.filter(room_no__contains="").order_by('room_no')
     return render(request, 'details/artifact_list.html', {'artifacts':artifacts})
 
 
-
 def room(request,i):
     artifacts = ArtifactDetail.objects.filter(room_no__contains=str(i))
-    return render(request,'details/room_number1.html',{'artifacts':artifacts})
-
-
-
-
-def make_html():
-    for i in range(int(no_of_rooms)+1):
-        fila=open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'templates/details/'+"room_number"+str(i+1)+".html"),'w+')
-        artifacts_in_room = ArtifactDetail.objects.filter(room_no__contains = str(i))
-
-        #fila.write(room_template)
-        fila.close()
+    fila=open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'templates/details/'+"room_number"+str(i)+".html"),'w+')
+    fila.write(room_template)
+    fila.close()
+    return render(request,'details/room_number'+str(i)+'.html',{'artifacts':artifacts})
