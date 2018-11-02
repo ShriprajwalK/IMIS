@@ -7,6 +7,5 @@ k = a[len(a)-1].room_no
 
 urlpatterns = [
     path('', views.artifact_list, name='artifact_list'),
-    path('room1',views.temp[0], name = 'room number 1'),
-
+    path('room/<int:i>',views.room, name = "lola"),
     ]

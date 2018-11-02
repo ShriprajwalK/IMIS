@@ -49,15 +49,15 @@ room_template = """
 
 
 def artifact_list(request):
+    print(type(request))
     artifacts = ArtifactDetail.objects.filter(room_no__contains="").order_by('room_no')
     return render(request, 'details/artifact_list.html', {'artifacts':artifacts})
 
-temp = [lambda x:render(request,'details/room_number'+str(i)+'.html',{artifact:ArtifactDetail.objects.filter(room_no__contains=str(i))}) for i in range(1,3)]
-print(temp)
 
-def room_1(request):
-    artifacts = ArtifactDetail.objects.filter(room_no__contains="1")
-    return render(request,'details/room_number1.html',{artifact:artifacts})
+
+def room(request,i):
+    artifacts = ArtifactDetail.objects.filter(room_no__contains=str(i))
+    return render(request,'details/room_number1.html',{'artifacts':artifacts})
 
 
 
