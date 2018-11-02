@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import ArtifactDetail
 import os
 from django.conf import settings
+from django.http import HttpResponse
 
 #if a new artifact is added to an already present room... we haven't considered that.....yet
 
@@ -51,16 +52,15 @@ def artifact_list(request):
     artifacts = ArtifactDetail.objects.filter(room_no__contains="").order_by('room_no')
     return render(request, 'details/artifact_list.html', {'artifacts':artifacts})
 
+temp = [lambda x:render(request,'details/room_number'+str(i)+'.html',{artifact:ArtifactDetail.objects.filter(room_no__contains=str(i))}) for i in range(1,3)]
+print(temp)
 
-def artifacts_in_room(room_no):
-    artifacts = ArtifactDetail.objects.filter(room_no__contains=room_no)
-    return artifacts
+def room_1(request):
+    artifacts = ArtifactDetail.objects.filter(room_no__contains="1")
+    return render(request,'details/room_number1.html',{artifact:artifacts})
 
-artifacts_in_room(1)
 
-def room_no(i,request):
-    artifacts = artifacts_in_room()
-    return render(request, 'details/room_number1.html', {'artifacts' : artifacts})
+
 
 def make_html():
     for i in range(int(no_of_rooms)+1):
@@ -69,7 +69,3 @@ def make_html():
 
         #fila.write(room_template)
         fila.close()
-
-
-
-make_html()
