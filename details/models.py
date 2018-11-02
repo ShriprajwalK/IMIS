@@ -16,3 +16,6 @@ class ArtifactDetail(models.Model):
 
     def __str__(self):
         return self.artifact_name
+
+    def no_of_rooms(self):
+        return self.room_no
