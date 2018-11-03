@@ -15,12 +15,37 @@ room_template = """
 {% load static %}
 <html>
     <head>
+    <title>Artifact List {{artif}}</title>
+
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
       <link rel="stylesheet" href="{% static 'css/details.css' %}">
       <link href="https://fonts.googleapis.com/css?family=Patrick+Hand" rel="stylesheet">
-        <title>Artifact List {{artif}}</title>
-    </head>
-    <body>
+<style>
+.collapsible {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+.active, .collapsible:hover {
+    background-color: #555;
+}
+
+.collapse,#id {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+</style>
+</head>
+<body>
 
         <div class="page-header">
             <h1><a href="/">Artifact List</a></h1>
@@ -33,21 +58,39 @@ room_template = """
       <br>
       <br>
       <br>
+        <div class="container">
         <h1><p>{{ artifact.artifact_name }}</p></h1>
+        <button class="collapsible">Artifact Information</button>
+        <div id="demo" class="collapse">
         <p>Room number : {{ artifact.room_no }} , Artifact number: {{ artifact.artifact_no}} </p>
-        <p>{{ artifact.artifact_description|linebreaksbr }}</p>
-      <br>
-      <br>
-    </div>
+        {{ artifact.artifact_description|linebreaksbr }}
+        </div></div>
+    <br>
+  <br>
 {% endfor %}
+<script>
+var coll = document.getElementsByClassName("collapsible");
+var i;
 
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+</script>
 </body>
 </html>
 """
 
 
 def artifact_list(request):
-    artifacts = ArtifactDetail.objects.filter(room_no__contains="").order_by('room_no')
+    artifacts = ArtifactDetail.objects.filter(artifact_no__contains="1").order_by('room_no')
     return render(request, 'details/artifact_list.html', {'artifacts':artifacts})
 
 
