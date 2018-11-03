@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+#from django.conf.urls.static
 from . import views
 
 
@@ -10,4 +12,4 @@ urlpatterns = [
     path('feedback', views.feedback, name = "feedback"),
     path('success.html',views.success, name = 'success'),
     path('aravind',views.aravind,name = 'aravind')
-    ]
+    ] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

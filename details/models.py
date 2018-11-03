@@ -12,6 +12,7 @@ class ArtifactDetail(models.Model):
     excavated_date = models.DateField(default=timezone.localdate)
     artifact_year = models.CharField(max_length=40,default='NA')
 
+    artifact_image = models.ImageField(upload_to = "profile_image", blank = True)
 
 
     def __str__(self):
