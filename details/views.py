@@ -205,22 +205,6 @@ def artifact_list(request):
 
 
 
-def search(request):
-    if request.method == 'POST':
-            srch = requests.POST('srh')
-            if srch:
-                match = ArtifactDetail.objects.filter(Q(artifact_name__icontains=srch) |
-                                                    Q(artifact_description__icontains=srch)
-
-                )
-                if match:
-                    return render(request,'details/search.html',{'sr':match})
-                else:
-                    messages.error(request,"no result found")
-
-            else:
-                return HttpResponseRedirect('/search/')
-    return render(request,'details/search.html')
 
 def room(request,i):
     artifacts = ArtifactDetail.objects.filter(room_no__contains=str(i))
