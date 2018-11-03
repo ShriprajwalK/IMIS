@@ -23,7 +23,93 @@ room_template = """
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
       <link rel="stylesheet" href="{% static 'css/details.css' %}">
       <link href="https://fonts.googleapis.com/css?family=Patrick+Hand" rel="stylesheet">
+
 <style>
+/* Style the navbar */
+#navbar {
+overflow: hidden;
+background-color: #333;
+}
+
+/* Navbar links */
+#navbar a {
+float: left;
+display: block;
+color: #f2f2f2;
+text-align: center;
+padding: 14px;
+text-decoration: none;
+}
+
+/* Page content */
+.content {
+padding: 16px;
+}
+
+/* The sticky class is added to the navbar with JS when it reaches its scroll position */
+.sticky {
+position: fixed;
+top: 0;
+width: 100%;
+}
+
+/* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
+.sticky + .content {
+padding-top: 60px;
+}
+/* Add a black background color to the top navigation bar */
+.navbar {
+overflow: hidden;
+background-color: #e9e9e9;
+}
+
+/* Style the links inside the navigation bar */
+.navbar a {
+float: left;
+display: block;
+color: black;
+text-align: center;
+padding: 14px 16px;
+text-decoration: none;
+font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.navbar a:hover {
+background-color: #ddd;
+color: black;
+}
+
+/* Style the "active" element to highlight the current page */
+.navbar a.active {
+background-color: #2196F3;
+color: white;
+}
+
+/* Style the search box inside the navigation bar */
+.navbar input[type=text] {
+float: right;
+padding: 6px;
+border: none;
+margin-top: 8px;
+margin-right: 16px;
+font-size: 17px;
+}
+
+/* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
+@media screen and (max-width: 600px) {
+.navbar a, .navbar input[type=text] {
+float: none;
+display: block;
+text-align: left;
+width: 100%;
+margin: 0;
+padding: 14px;
+}
+.navbar input[type=text] {
+border: 1px solid #ccc;
+}
+}
 .collapsible {
     background-color: #777;
     color: white;
@@ -49,7 +135,10 @@ room_template = """
 </style>
 </head>
 <body>
-
+  <div id="navbar">
+<a class="active" href="/">Home</a>
+<a href="/feedback">Contact</a>
+</div>
         <div class="page-header">
             <h1><a href="/">Artifact List</a></h1>
         </div>
@@ -86,115 +175,23 @@ for (i = 0; i < coll.length; i++) {
     }
   });
 }
-</script>
- <input type='text' value='' placeholder='Search for...'>
+// When the user scrolls the page, execute myFunction
+window.onscroll = function() {myFunction()};
 
-<script>
-$(document).ready(function() {
-  var input = $('input');
-  var button = $('button');
+// Get the navbar
+var navbar = document.getElementById("navbar");
 
-  //Create varialbe to store search field
-  var toSearch = '';
+// Get the offset position of the navbar
+var sticky = navbar.offsetTop;
 
-  //Api data:
-  var searchUrl = 'https://en.wikipedia.org/w/api.php';
-
-  //.ajax() to get articles
-   var ajaxArticl = function() {
-  $.ajax({
-        type: "GET",
-        url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Jimi_Hendrix&callback=?",
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        dataType: "json",
-        success: function (data, textStatus, jqXHR) {
-
-            var markup = data.parse.text["*"];
-            var blurb = $('<div></div>').html(markup);
-
-            // remove links as they will not work
-            blurb.find('a').each(function() { $(this).replaceWith($(this).html()); });
-
-            // remove any references
-            blurb.find('sup').remove();
-
-            // remove cite error
-            blurb.find('.mw-ext-cite-error').remove();
-            $('#article').html($(blurb).find('p'));
-
-        },
-        error: function (errorMessage) {
-        }
-    });
-   }
-
-
-  var ajaxArticle = function() {
-      $.ajax({
-        url: searchUrl,
-        dataType: 'jsonp',
-        data: {
-          action: 'query',
-          format: 'json',
-          prop: 'extracts',
-          exchars: '200',
-          exlimit: 'max',
-          explaintext: '',
-          exintro: '',
-          rawcontinue: '',
-          generator: 'search',
-          gsrsearch: toSearch,
-          gsrnamespace: '0',
-          gsrlimit: '10'
-        }, //End data:
-        success: function(json1) {
-          console.log(json1);
-        }
-      }); //End .ajax()
-    }
-
-  //.ajax() to get images
-  var ajaxImage = function() {
-      $.ajax({
-        url: searchUrl,
-        dataType: 'jsonp',
-        data: {
-          'action': 'query',
-          'titles': toSearch,
-          'prop': 'pageimages',
-          'format': 'json'
-        }, //End data:
-        success: function(json2) {
-          console.log(json2)
-        }
-      }); //End .ajax()
-    }
-
-  //Auto complete search bar
-  input.autocomplete({
-    source: function(request, response) {
-      $.ajax({
-        url: searchUrl,
-        dataType: 'jsonp',
-        data: {
-          'action': "opensearch",
-          'format': "json",
-          'search': request.term
-        },
-        success: function(data) {
-          response(data[1]);
-        }
-      });
-    }
-  }); //End auto compelete
-
-  //Listen for click on button to store search field
-  //End click
-})
-
-
-
+// Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
+function myFunction() {
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky")
+  } else {
+    navbar.classList.remove("sticky");
+  }
+}
 </script>
 
 </body>
